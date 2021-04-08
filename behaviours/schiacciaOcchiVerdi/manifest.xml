@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<package uuid="schiacciaocchiverdi" version="0.0.1">
+ <names>
+  <name lang="en_US">schiacciaOcchiVerdi</name>
+ </names>
+ <descriptions>
+  <description lang="it_IT">Simula il movimento delle palpebre</description>
+ </descriptions>
+ <supportedLanguages>
+  <language>en_US</language>
+  <language>it_IT</language>
+ </supportedLanguages>
+ <descriptionLanguages>
+  <language>en_US</language>
+  <language>it_IT</language>
+ </descriptionLanguages>
+ <contents>
+  <behaviorContent path="behavior_1">
+   <userRequestable/>
+   <nature>solitary</nature>
+   <names>
+    <name lang="en_US">schiaccia_occhi</name>
+   </names>
+   <permissions/>
+  </behaviorContent>
+ </contents>
+</package>
