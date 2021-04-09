@@ -17,9 +17,9 @@ This project (ROS Package) implements a model based on bidirectional multi-modal
 
 # Configuration:
 Set your parameters in src/w_icar/launch/engagement.launch 
-- robot_ip <IP of the robot> (Default: from "pepper" on DNS or /etc/hosts)
-- robot_port <NAOqi bridge port> (Default: 9559)
-- robot_name <The name of robot> (Default: "pepper")
+- robot_ip <IP of the robot> (Default: from "pepper" name on DNS or in file /etc/hosts)
+- robot_port <NAOqi proxy port> (Default: from environment variable NAO_PORT  or the 9559 value)
+- robot_name <The robot name> (Default: "pepper")
 - engMode <The engagement mode> ("Unengaged", “FullyEngaged“, “SemiEngaged“. Default: "FullyEngaged")
 - trackMode <The tracking mode> (“Head“, “BodyRotation“, “WholeBody“, “MoveContextually“. Default: "BodyRotation")
 
