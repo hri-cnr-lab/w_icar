@@ -12,17 +12,11 @@
  	<param name="robot_port" type="string" value="$(arg robot_port)" />
  	<param name="robot_name" type="string" value="$(arg robot_name)" />  
 
-	<arg name="engMode" default="FullyEngaged" />  
-	<!--arg name="engMode" default="SemiEngaged" /-->  
-	<arg name="trackMode" default="BodyRotation" />
-	<!--arg name="trackMode" default="MoveContextually" /-->
 	<arg name="tabShow" default="True" />
  	
- 	<param name="engMode" type="string" value="$(arg engMode)" />  
-	<param name="trackMode" type="string" value="$(arg trackMode)" />  
-	<param name="tabShow" type="string" value="$(arg tabShow)" />  
+	<param name="tabShow" type="string" value="$(arg tabShow)" />
 
-  	<!-- Launch DIALOG -->
+  	<!-- Launch W@ICAR -->
   	<node pkg="w_icar" type="w_icar.py" name="$(arg robot_name)_w_icar" output="screen"/>
   	
 </launch>

@@ -5,7 +5,6 @@ import os
 import sys
 
 sys.path.append(os.path.dirname(__file__) + "/../pyLib/")
-from tablet import tabletShowText
 from collections import deque
 from collections import Counter
 
@@ -15,7 +14,7 @@ from rospy.timer import sleep
 from std_msgs.msg import Int8, String
 from naoqi import ALProxy
 
-logger = qi.Logger("face-tracking-node")
+logger = qi.Logger("engagement-node")
 
 TIMEOUT=10 #s
 
@@ -23,7 +22,7 @@ faceS = [0,0,0,0,0,0,0,0]
 gazeS = [0,0,0,0,0,0,0,0]
 facenameS=['...','...','...','...','...','...','...','...','...','...',]
 
-class FaceTracking():
+class Engagement():
     def __init__(self):
         self.faces = 0
         self.gaze = 0
@@ -51,7 +50,6 @@ class FaceTracking():
         self.awareness.setEngagementMode(rospy.get_param('engMode')) # cf http://doc.aldebaran.com/2-5/naoqi/peopleperception/albasicawareness.html
         self.awareness.setTrackingMode(rospy.get_param('trackMode')) # only use head to track
         self.awareness.setStimulusDetectionEnabled('People', True)
-        self.tabShow = rospy.get_param('tabShow')
 
         self.awareness.setEnabled(True)
         
@@ -141,10 +139,10 @@ if __name__ == "__main__":
     
     rate = rospy.Rate(3) # Hz
 
-    faceTracking = FaceTracking();
-    faceTracking.gaze_tolerance = 0.4
+    engagement = Engagement();
+    engagement.gaze_tolerance = 0.4
     # default FirstLimitDistance is 1.5m (default SecondLimitDistance is 2.5m)
-    faceTracking.engagement_zones.setFirstLimitDistance(1.3)
+    engagement.engagement_zones.setFirstLimitDistance(1.3)
     nfaces = 0
     
     faceStableList = deque(faceS)
@@ -154,18 +152,18 @@ if __name__ == "__main__":
 
     try:
         while not rospy.is_shutdown():
-            faces = faceTracking.detect()
+            faces = engagement.detect()
             
             faceStableList.pop()
-            faceStableList.appendleft(faceTracking.faces)
+            faceStableList.appendleft(engagement.faces)
             faceStable=int(round(sum(faceStableList)/8.0))
                         
             gazeStableList.pop()
-            gazeStableList.appendleft(faceTracking.gaze)
+            gazeStableList.appendleft(engagement.gaze)
             gazeStable=int(round(sum(gazeStableList)/8.0))
                         
             facenameStableList.pop()
-            facenameStableList.appendleft(faceTracking.name)
+            facenameStableList.appendleft(engagement.name)
             X=Counter(facenameStableList).most_common()
             if(len(X)==1):
                 face_nameStable=X[0][0]
@@ -173,34 +171,29 @@ if __name__ == "__main__":
                 if (X[0][0]=='...'):
                     face_nameStable=X[1][0]
                                     
-            face.publish(faceTracking.faces)
-            gaze.publish(faceTracking.gaze)
+            face.publish(engagement.faces)
+            gaze.publish(engagement.gaze)
             face_name.publish(face_nameStable)
             
             f.publish(faceStable)
             g.publish(gazeStable)
             f_n.publish(face_nameStable)
-            #print "numero facce: " + str(faceTracking.faces), "Sguardo intercettato: "+str(faceTracking.gaze), "nome faccia: "+faceTracking.name    
+            #print "numero facce: " + str(engagement.faces), "Sguardo intercettato: "+str(engagement.gaze), "nome faccia: "+engagement.name    
             #print "numero facce S: " + str(faceStable), "Sguardo intercettato S: "+str(gazeStable), "nome faccia S: "+face_nameStable  
-            #print str(faceTracking.faces)+";", str(faceStable)+";", str(faceTracking.gaze)+";", str(gazeStable)+";", faceTracking.name+";", face_nameStable
+            #print str(engagement.faces)+";", str(faceStable)+";", str(engagement.gaze)+";", str(gazeStable)+";", engagement.name+";", face_nameStable
 
-            faceTracking.faces = faceStable
-            faceTracking.gaze = gazeStable
-            faceTracking.name = face_nameStable
+            engagement.faces = faceStable
+            engagement.gaze = gazeStable
+            engagement.name = face_nameStable
             
-            faceTracking.currentState = faceTracking.setState()
-            status.publish(faceTracking.currentState)
+            engagement.currentState = engagement.setState()
+            status.publish(engagement.currentState)
             
-            #print faceTracking.currentState
+            #print engagement.currentState
             
             if (faces != nfaces):
                 nfaces = faces
             rate.sleep()
 
-            if faceTracking.tabShow == "True":
-                tabletShowText(str(faceTracking.faces) + ") " + faceTracking.currentState + " : " + faceTracking.name)
-
     finally:
-        if faceTracking.tabShow == "True":
-            tabletShowText("")
-        faceTracking.close()
+        engagement.close()

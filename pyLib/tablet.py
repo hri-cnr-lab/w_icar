@@ -81,5 +81,3 @@ def tabletShowPage(page):
 if __name__ == "__main__":
     
     tabletShowText("Please check your script arguments.")
-    
-    #tabletShowPage("dialog/recording.html")

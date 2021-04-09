@@ -33,7 +33,6 @@ Robot_Name = ''
 task_type = ''
 task_drug = ''
 task_timing = ''
-control = ''
 sentence = ''
 reply = ''
 
@@ -47,7 +46,6 @@ postureService = ''
 awarenessService = ''
 commandURL = ''
 tabletService = ''
-tabletApp = ''
 memoryService = ''
 
 
@@ -74,7 +72,7 @@ def status(data):
 
 # Open session to SoftBank (Aldebaran) robot NAOqi
 def connectRobot():
-    global session, Robot_Name, Speech2Text, tabletApp
+    global session, Robot_Name
     Robot_IP =  rospy.get_param('robot_ip')
     Robot_Port = rospy.get_param('robot_port')
     Robot_Name = rospy.get_param('robot_name')
@@ -84,8 +82,6 @@ def connectRobot():
     try:
         connection_url = "tcp://" + Robot_IP + ":" + Robot_Port
         session.connect(connection_url)
-        tabletApp = qi.Application(["PepperTablet", "--qi-url=" + connection_url])
-        tabletApp.start()
 
     except RuntimeError:
         print ("Can't connect to Naoqi at ip " + Robot_IP + " on port " + Robot_Port + "\n Please check your script arguments. Run with -h option for help.")
@@ -110,7 +106,7 @@ def activeServices():
 
 # Activate ROS topics subscription
 def topicsSubscription():
-    global Robot_Name, control
+    global Robot_Name
     rospy.init_node(Robot_Name + '_w_icar', anonymous=True)
     rospy.Subscriber('/' + Robot_Name + '/gaze_tracking', Int8, gazeFound)
     rospy.Subscriber('/' + Robot_Name + '/face_nameStable', String, namePerson)
@@ -141,6 +137,7 @@ def blinkingEyes(val):
 
 # Enable robot internal motion modes
 def activeMotionModes():
+    global motionService
     motionService.setBreathEnabled('Body', True)
     motionService.setBreathEnabled('Head', True)
 
@@ -420,25 +417,27 @@ class RobotSpeaks(smach.State):
 
 
 def main():
+    global Robot_Name, faceDetectionService, currentState, person, state_timeout, sentence, lastPerson, reply
     connectRobot()
     activeServices()
-    global Robot_Name, faceDetectionService, currentState, person, state_timeout, sentence, lastPerson, reply
-    Robot_Name = rospy.get_param('robot_name')
     topicsSubscription()
+    activeMotionModes()
     logger.info("W-ICAR Node started")
 
     faceDetectionService.clearDatabase()
     time.sleep(2)
 
     # Create a SMACH state machine
-    sm_top = smach.StateMachine(outcomes=['stop'])
-    sm_top.userdata.state_timeout=state_timeout
-    sm_top.userdata.sentence=sentence
-    sm_top.userdata.lastPerson=lastPerson
-    sm_top.userdata.reply=reply
+    sm = smach.StateMachine(outcomes=['stop'])
     
-    # Open the container
-    with sm_top:
+    # Userdata mapping
+    sm.userdata.state_timeout=state_timeout
+    sm.userdata.sentence=sentence
+    sm.userdata.lastPerson=lastPerson
+    sm.userdata.reply=reply
+    
+    # Add states
+    with sm:
         smach.StateMachine.add('Wait', Wait(), transitions={'human_presence':'PersonDetected','end':'stop'})
         smach.StateMachine.add('PersonDetected', PersonDetected(), transitions={'recognized':'EngagedWithKnown','unrecognized':'EngagedWithUnknown','human_absence':'Wait'})
         smach.StateMachine.add('EngagedWithKnown', EngagedWithKnown(), transitions={'listening':'UserSpeaks','speaking':'RobotSpeaks','error':'PersonDetected'})        
@@ -450,11 +449,11 @@ def main():
         smach.StateMachine.add('RobotReplies', RobotReplies(), transitions={'done':'EngagedWithKnown'})
 
     # Create and start the introspection server
-    sis = smach_ros.IntrospectionServer('sis_run', sm_top, '/W@ICAR')
+    sis = smach_ros.IntrospectionServer('sis_run', sm, '/W@ICAR')
     sis.start()
 
     # Execute SMACH plan
-    outcome = sm_top.execute()
+    outcome = sm.execute()
 
     # Wait for ctrl-c to stop the application
     sis.stop()
