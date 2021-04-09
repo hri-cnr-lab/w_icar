@@ -117,8 +117,8 @@ def topicsSubscription():
     rospy.Subscriber('/' + Robot_Name + '/face_status', String, status)
 
 
-# Manages robot CrushesEyes behaviours
-def crushesEyes(val):
+# Manages robot blinkingEyes behaviours
+def blinkingEyes(val):
     behaviorService.stopBehavior("schiacciaocchibianchi/behavior_1")
     behaviorService.stopBehavior("schiacciaocchiverdi/behavior_1")
     behaviorService.stopBehavior("schiacciaocchiblue/behavior_1")
@@ -126,10 +126,10 @@ def crushesEyes(val):
     if val == 'blue':
         behaviorService.runBehavior("schiacciaocchiblue/behavior_1", _async=True)
         return 0
-    if val == 'verdi':
+    if val == 'green':
         behaviorService.runBehavior("schiacciaocchiverdi/behavior_1", _async=True)
         return 0
-    if val == 'bianchi':
+    if val == 'white':
         behaviorService.runBehavior("schiacciaocchibianchi/behavior_1", _async=True)
         return 0
     if val == 'off':
@@ -154,7 +154,7 @@ def listen2text():
     locked = gaze_found # if True
     s2t.ON = False
     timeout = time.time() + state_timeout
-    crushesEyes('verdi')
+    blinkingEyes('green')
     tabletShowPage("dialog/eng2know.html")    
     while locked:
         s2t.ON = gaze_found
@@ -179,7 +179,7 @@ def listen2text():
             s2t.save_speech(s2t.FILENAME, s2t.preAudio+s2t.audio2send)
             s2t.rec = False
             print "End registration.\n"
-            crushesEyes('off')
+            blinkingEyes('off')
             tabletShowPage("dialog/Thinking.html")
             # Call Google Speack2Text service
             text = s2t.send2google(s2t.FILENAME, "it-IT").encode('utf-8')
@@ -191,7 +191,7 @@ def listen2text():
                 print "Listen timeout!"
                 text = ''
                 locked = False
-    crushesEyes('off')
+    blinkingEyes('off')
     tabletShowPage("dialog/void.html")        
     return text
 
@@ -199,10 +199,10 @@ def listen2text():
 # The robot speaks the "text" with the internal predefined service
 def speech(text):
     global animatedSpeechService
-    crushesEyes('blue')
+    blinkingEyes('blue')
     tabletShowPage("dialog/talking.html")
     animatedSpeechService.say(text)
-    crushesEyes('off')
+    blinkingEyes('off')
     tabletShowPage("dialog/void.html")
     return 0
 
