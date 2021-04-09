@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<package uuid="crss_tablet" version="0.0.1">
+ <names>
+  <name lang="en_US">CRSS Tablet</name>
+ </names>
+ <descriptions>
+  <description lang="en_US">Sample application to show how to use the tablet</description>
+ </descriptions>
+ <supportedLanguages>
+  <language>en_US</language>
+  <language>it_IT</language>
+ </supportedLanguages>
+ <descriptionLanguages>
+  <language>en_US</language>
+  <language>it_IT</language>
+ </descriptionLanguages>
+ <contents>
+  <behaviorContent path="main">
+   <userRequestable/>
+   <nature>interactive</nature>
+   <permissions/>
+  </behaviorContent>
+ </contents>
+ <requirements>
+  <naoqiRequirement minVersion="2.4"/>
+  <robotRequirement model="JULIETTE"/>
+ </requirements>
+</package>
