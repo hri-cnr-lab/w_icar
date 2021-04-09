@@ -3,6 +3,7 @@ This project (ROS Package) implements a model based on bidirectional multi-modal
 
 # Prerequisites:
 - NAO or Pepper Robot (https://www.softbankrobotics.com/)
+- Choreograph (https://www.softbankrobotics.com/emea/en/support/)
 - ROS (https://www.ros.org/) (rosdistro: kinetic)
 - NAOqi (http://doc.aldebaran.com/index.html) 
 - Python 2.7
@@ -14,6 +15,7 @@ This project (ROS Package) implements a model based on bidirectional multi-modal
 - Clone GitHub repository into src directory of your ROS workspace 
 (git clone https://github.com/hri-cnr-lab/w_icar.git)
 - Execute catkin_make on the root of your ROS workspace
+- Install in the robot all behaviours with Choreograph from src/w_icar/behaviours
 
 # Configuration:
 Set your parameters in src/w_icar/launch/engagement.launch 
