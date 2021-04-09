@@ -23,6 +23,6 @@
 	<param name="tabShow" type="string" value="$(arg tabShow)" />  
 	
   	<!-- Launch naoqi face tracking -->
-  	<node pkg="w_icar" type="FaceTracking.py" name="$(arg robot_name)_face_tracking" output="screen"/>
+  	<node pkg="w_icar" type="engagement.py" name="$(arg robot_name)_engagement" output="screen"/>
   	
 </launch>
