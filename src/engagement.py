@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     status = rospy.Publisher(Robot_Name + '/face_status', String, queue_size=0)
     
-    rate = rospy.Rate(3) # hz
+    rate = rospy.Rate(3) # Hz
 
     faceTracking = FaceTracking();
     faceTracking.gaze_tolerance = 0.4
