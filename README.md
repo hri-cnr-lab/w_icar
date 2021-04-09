@@ -19,16 +19,16 @@ This project (ROS Package) implements a model based on bidirectional multi-modal
 
 # Configuration:
 Set your parameters in src/w_icar/launch/engagement.launch 
-- robot_ip <IP of the robot> (Default: from "pepper" name on DNS or in file /etc/hosts)
-- robot_port <NAOqi proxy port> (Default: from environment variable NAO_PORT  or the 9559 value)
-- robot_name <The robot name> (Default: "pepper")
-- engMode <The engagement mode> ("Unengaged", “FullyEngaged“, “SemiEngaged“. Default: "FullyEngaged")
-- trackMode <The tracking mode> (“Head“, “BodyRotation“, “WholeBody“, “MoveContextually“. Default: "BodyRotation")
+- robot_ip [IP of the robot] (Default: from "pepper" name on DNS or in file /etc/hosts)
+- robot_port [NAOqi proxy port] (Default: from environment variable NAO_PORT  or the 9559 value)
+- robot_name [The robot name] (Default: "pepper")
+- engMode [The engagement mode] ("Unengaged", “FullyEngaged“, “SemiEngaged“. Default: "FullyEngaged")
+- trackMode [The tracking mode] (“Head“, “BodyRotation“, “WholeBody“, “MoveContextually“. Default: "BodyRotation")
 
 # Execution:
 - Launch the roscore
 - Launch pepper bringup 
-(roslaunch pepper_bringup pepper_full.launch nao_ip:=<robot_ip> namespace:=pepper)
+(roslaunch pepper_bringup pepper_full.launch nao_ip:=<robot_ip> namespace:=<robot_name>)
 - Launch w_icar engagement 
 (roslaunch  w_icar engagement.launch)
 - Launch w_icar w_icar 
